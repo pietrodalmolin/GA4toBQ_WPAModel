@@ -17,4 +17,9 @@ In BigQuery, you will find three datasets:
   The tables preserve the original schema, except for `event_params` and `user_properties`, from which values are extracted using `UNNEST()` to create separate columns for each key. The `ecommerce` and `items` objects are excluded from the tables.  
   The resulting tables are **partitioned by date** and **clustered by `event_name` and `event_action`**. They can be found under `steam-mantis-108908.WPA.*`, i.e. `steam-mantis-108908.WPA.270382730` for Betsson.com.
 - **01_WPA: refresh tables**  
-  This query is scheduled to run daily, updating the tables by appending new data for each day. It can be found under `Scheduled Queries > WPA: properties refresh`.
+  This query is scheduled to run daily, updating the tables by appending new data for each day. The scheduled query can be found under `Scheduled Queries > WPA: properties refresh`.
+### **WPA_Tables:** `steam-mantis-108908.WPA_Tables` 
+- **02_WPA: lnd traffic - create table**  
+  This query processes the tables stored under `steam-mantis-108908.WPA.*` to obtain last non direct traffic source and last non direct traffic medium for each session_id. The resulting table is `steam-mantis-108908.WPA_Tables.00_LastNonDirectTraffic`
+- **01_WPA: refresh tables**  
+  This query is scheduled to run daily, updating the tables `steam-mantis-108908.WPA_Tables.00_LastNonDirectTraffic`. The scheduled query can be found under `Scheduled Queries > WPA: traffic refresh`.
