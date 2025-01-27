@@ -21,5 +21,9 @@ In BigQuery, you will find three datasets:
 ### **WPA_Tables:** `steam-mantis-108908.WPA_Tables` 
 - **02_WPA: lnd traffic - create table**  
   This query processes the tables stored under `steam-mantis-108908.WPA.*` to obtain last non direct traffic source and last non direct traffic medium for each session_id. The resulting table is `steam-mantis-108908.WPA_Tables.00_LastNonDirectTraffic`
-- **01_WPA: refresh tables**  
+- **02_WPA: lnd traffic - refresh table** 
   This query is scheduled to run daily, updating the tables `steam-mantis-108908.WPA_Tables.00_LastNonDirectTraffic`. The scheduled query can be found under `Scheduled Queries > WPA: traffic refresh`.
+- **02_WPA: CA_LoginSuccess**
+  This query creates a table for the GA4 event "Login Success"
+  
+  
