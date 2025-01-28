@@ -52,4 +52,7 @@ In BigQuery, you will find three datasets:
   This query creates a table for the GA4 event "NRC".  
 
 - **02_WPA: CA_NDCRDC**  
-  This query creates a table for the GA4 event "NDC & RDC".  
+  This query creates a table for the GA4 event "NDC & RDC".
+
+- **02_WPA: SB_SearchClick**  
+  This query creates a table for the GA4 event "SB Search Click".   
