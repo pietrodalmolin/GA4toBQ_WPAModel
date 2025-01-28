@@ -54,6 +54,12 @@ In BigQuery, you will find three datasets:
 - **02_WPA: CA_NDCRDC**  
   This query creates a table for the GA4 event "NDC & RDC".
 
+- **02_WPA: CA_CarouselCardClick**  
+  This query creates a table for the GA4 event "Carousel Card Click".
+
+- **02_WPA: CA_CarouselNavigationClick**  
+  This query creates a table for the GA4 event "CarouselNavigation Click".
+
 - **02_WPA: SB_SearchClick**  
   This query creates a table for the GA4 event "SB Search Click".  
 
