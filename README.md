@@ -71,3 +71,27 @@ In BigQuery, you will find three datasets:
 
 - **02_WPA: SB_BetConfirmed**  
   This query creates a table for the GA4 event "SB Bet Confirmed". 
+
+- **02_WPA: SB_BannerClick**  
+  This query creates a table for the GA4 event "SB Banner Click". 
+
+- **02_WPA: SB_BetFailed**  
+  This query creates a table for the GA4 event "SB Bet Failed". 
+
+- **02_WPA: SB_BetHistoryClick**  
+  This query creates a table for the GA4 event "SB Bet History Click". 
+
+- **02_WPA: SB_BetShare**  
+  This query creates a table for the GA4 event "SB Bet Share". 
+
+- **02_WPA: SB_BurgerMenu**  
+  This query creates a table for the GA4 event "SB Burger Menu". 
+
+- **02_WPA: SB_ContentLinksClick**  
+  This query creates a table for the GA4 event "SB Content Links Click". 
+
+- **02_WPA: SB_LiveEventVisit**  
+  This query creates a table for the GA4 event "SB Live Event Visit".
+
+- **02_WPA: SB_WidgetClick**  
+  This query creates a table for the GA4 event "SB Widget Click". 
