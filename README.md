@@ -27,29 +27,29 @@ In BigQuery, you will find three datasets:
 - **02_WPA: lnd traffic - refresh table**  
   This query is scheduled to run daily, updating the table `steam-mantis-108908.WPA_Tables.00_LastNonDirectTraffic`. The scheduled query can be found under `Scheduled Queries > WPA: traffic refresh`.  
 
-- **02_WPA: CA_LoginFormOpen - create table**  
+- **02_WPA: CA_LoginFormOpen**  
   This query creates a table for the GA4 event "Login Form Open".  
 
-- **02_WPA: CA_LoginSubmittedFailed - create table**  
+- **02_WPA: CA_LoginSubmittedFailed**  
   This query creates a table for the GA4 event "Login Submitted & Login Failed".  
 
-- **02_WPA: CA_LoginSuccess - create table**  
+- **02_WPA: CA_LoginSuccess**  
   This query creates a table for the GA4 event "Login Success".  
 
-- **02_WPA: CA_RegistrationFormOpen - create table**  
+- **02_WPA: CA_RegistrationFormOpen**  
   This query creates a table for the GA4 event "Registration Form Open".  
 
-- **02_WPA: CA_RegistrationFormFields - create table**  
+- **02_WPA: CA_RegistrationFormFields**  
   This query creates a table for the GA4 event "Registration Form Fields".  
 
-- **02_WPA: CA_RegistrationSubmit - create table**  
+- **02_WPA: CA_RegistrationSubmit**  
   This query creates a table for the GA4 event "Registration Submit".  
 
-- **02_WPA: CA_RegistrationFailed - create table**  
+- **02_WPA: CA_RegistrationFailed**  
   This query creates a table for the GA4 event "Registration Failed".  
 
-- **02_WPA: CA_NRC - create table**  
+- **02_WPA: CA_NRC**  
   This query creates a table for the GA4 event "NRC".  
 
-- **02_WPA: CA_NDCRDC - create table**  
+- **02_WPA: CA_NDCRDC**  
   This query creates a table for the GA4 event "NDC & RDC".  
