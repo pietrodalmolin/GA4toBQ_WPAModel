@@ -67,4 +67,7 @@ In BigQuery, you will find three datasets:
   This query creates a table for the GA4 event "SB Favourite Click". 
 
 - **02_WPA: SB_PlaceBetClick**  
-  This query creates a table for the GA4 event "SB Place Bet Click". 
+  This query creates a table for the GA4 event "SB Place Bet Click".
+
+- **02_WPA: SB_BetConfirmed**  
+  This query creates a table for the GA4 event "SB Bet Confirmed". 
