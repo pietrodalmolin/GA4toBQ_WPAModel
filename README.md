@@ -31,8 +31,13 @@ In BigQuery, you will find three datasets:
   This query creates a table for the GA4 event "Login Success"
 - **02_WPA: CA_RegistrationFormOpen - create table**
   This query creates a table for the GA4 event "Registration Form Open"
+- **02_WPA: CA_RegistrationFormFields - create table**
+  This query creates a table for the GA4 event "Registration Form Fields"
 - **02_WPA: CA_RegistrationSubmit - create table**
   This query creates a table for the GA4 event "Registration Submit"
 - **02_WPA: CA_RegistrationFailed - create table**
-  This query creates a table for the GA4 event "Registration Failed"   
-  
+  This query creates a table for the GA4 event "Registration Failed"
+- **02_WPA: CA_NRC - create table**
+  This query creates a table for the GA4 event "NRC"      
+- **02_WPA: CA_NDCRDC - create table**
+  This query creates a table for the GA4 event "NDC & RDC"     
