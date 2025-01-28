@@ -55,4 +55,7 @@ In BigQuery, you will find three datasets:
   This query creates a table for the GA4 event "NDC & RDC".
 
 - **02_WPA: SB_SearchClick**  
-  This query creates a table for the GA4 event "SB Search Click".   
+  This query creates a table for the GA4 event "SB Search Click".  
+
+- **02_WPA: SB_QuickLinksScroller**  
+  This query creates a table for the GA4 event "SB Quick Links Scroller".  
