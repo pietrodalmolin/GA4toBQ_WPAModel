@@ -59,3 +59,6 @@ In BigQuery, you will find three datasets:
 
 - **02_WPA: SB_QuickLinksScroller**  
   This query creates a table for the GA4 event "SB Quick Links Scroller".  
+
+- **02_WPA: SB_MarketSelector**  
+  This query creates a table for the GA4 event "SB Market Selector". 
