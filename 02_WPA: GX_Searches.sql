@@ -20,7 +20,7 @@ SELECT * FROM steam-mantis-108908.WPA.270389480 UNION ALL SELECT * FROM steam-ma
 WHERE wpa.date <='2025-01-26'
 --EVENT FILTERS
 AND Event_Name='Clicks'
-AND (Technical_EventName LIKE '%Top Navigation Click%'
+AND (Technical_EventName LIKE '%TopNavigationClick%'
 OR Technical_EventName LIKE '%GameFrameClick%')
 AND Interface_Component LIKE '%Search%'
 
