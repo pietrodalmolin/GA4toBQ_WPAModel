@@ -1,14 +1,14 @@
-CREATE TABLE `steam-mantis-108908.WPA_Tables.CA_LoginSuccess`
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Tables.CA_LoginSuccess`
 PARTITION BY DATE(Date)
 CLUSTER BY property_id, event_name, eventaction AS
  (
  SELECT
 --SESSION LEVEL COLUMNS
-property_id,date,CONCAT(user_pseudo_id, ga_session_id) AS session_id,user_pseudo_id,ga_session_number,session_engaged,Interface_Brand,Customer_Status_Start,geo.city AS city,geo.country AS country,geo.region AS region,device.mobile_brand_name AS mobile_brand_name,device.browser AS device_browser,device.browser_version AS device_browser_version,device.category AS device_category,device.mobile_marketing_name AS mobile_marketing_name,device.mobile_model_name AS mobile_model_name,device.operating_system AS device_operating_system,device.operating_system_version AS device_operating_system_version
+property_id,date,CONCAT(user_pseudo_id, ga_session_id) AS session_id,user_pseudo_id,ga_session_number,session_engaged,Interface_Brand,Customer_Status_Start,geo.city AS city,geo.country AS country,geo.region AS region,device.mobile_brand_name AS mobile_brand_name,device.web_info.browser AS device_web_info_browser,device.web_info.browser_version AS device_web_info_browser_version,device.category AS device_category,device.mobile_marketing_name AS mobile_marketing_name,device.mobile_model_name AS mobile_model_name,device.operating_system AS device_operating_system,device.operating_system_version AS device_operating_system_version
 --TRAFFIC
 ,MAX(lnd.lnd_source) as lnd_source,MAX(lnd.lnd_medium) as lnd_medium,MAX(collected_traffic_source.manual_source) as lc_source,MAX(collected_traffic_source.manual_medium) as lc_medium,MAX(lnd.channel_grouping) as channel_grouping
 --GLOBAL DIMENSIONS
-,Content_Group,event_name,EventAction,Customer_Status_Event,device.web_info.hostname AS device_hostname,Login_Status,page_location,page_referrer,page_title,Technical_EventName,Technical_PlatformName,Technical_ScreenOrientation,Technical_ScreenResolution,User_CustomerLevel,Sub_Area
+,Content_Group,event_name,EventAction,Customer_Status_Event,device.web_info.hostname AS device_web_info_hostname,Login_Status,page_location,page_referrer,page_title,Technical_EventName,Technical_PlatformName,Technical_ScreenOrientation,Technical_ScreenResolution,User_CustomerLevel,Sub_Area
 --EVENT SPECIFIC DIMENSIONS
 ,Login_Method
 ,User_Reg_Country
@@ -23,18 +23,18 @@ SELECT * FROM steam-mantis-108908.WPA.270389480 UNION ALL SELECT * FROM steam-ma
 ) wpa
 LEFT JOIN 
   (SELECT session_id,lnd_source,lnd_medium,channel_grouping FROM `steam-mantis-108908.WPA_Tables.00_LastNonDirectTraffic`
-  WHERE date <='2025-01-24'
+  WHERE date <='2025-01-28'
   GROUP BY session_id,lnd_source,lnd_medium,channel_grouping) lnd
 ON CONCAT(wpa.user_pseudo_id, wpa.ga_session_id) = lnd.session_id
 
-WHERE wpa.date <='2025-01-24'
+WHERE wpa.date <='2025-01-28'
 --EVENT FILTERS
 AND Event_Name='Login_Funnel'
 AND EventAction LIKE 'Login Success%'
 
 GROUP BY
 --SESSION LEVEL COLUMNS
-property_id,date,CONCAT(user_pseudo_id, ga_session_id),user_pseudo_id,ga_session_number,session_engaged,Interface_Brand,Customer_Status_Start,geo.city,geo.country,geo.region,device.mobile_brand_name,device.browser,device.browser_version,device.category,device.mobile_marketing_name,device.mobile_model_name,device.operating_system,device.operating_system_version
+property_id,date,CONCAT(user_pseudo_id, ga_session_id),user_pseudo_id,ga_session_number,session_engaged,Interface_Brand,Customer_Status_Start,geo.city,geo.country,geo.region,device.mobile_brand_name,device.web_info.browser,device.web_info.browser_version,device.category,device.mobile_marketing_name,device.mobile_model_name,device.operating_system,device.operating_system_version
 --GLOBAL DIMENSIONS
 ,Content_Group,event_name,EventAction,Customer_Status_Event,device.web_info.hostname,Login_Status,page_location,page_referrer,page_title,Technical_EventName,Technical_PlatformName,Technical_ScreenOrientation,Technical_ScreenResolution,User_CustomerLevel,Sub_Area
 --EVENT SPECIFIC DIMENSIONS
