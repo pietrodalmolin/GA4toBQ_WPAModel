@@ -1,0 +1,7 @@
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Dimensions.02_interface_brand` AS
+
+SELECT DISTINCT(interface_brand) FROM `steam-mantis-108908.WPA_Tables.00_Sessions`
+
+where interface_brand is not null
+
+ORDER BY interface_brand ASC
