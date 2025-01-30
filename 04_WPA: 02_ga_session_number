@@ -1,0 +1,10 @@
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Dimensions.02_ga_session_number`
+
+AS
+WITH
+  numbers AS (
+    SELECT x
+    FROM UNNEST(GENERATE_ARRAY(1, 100000, 1)) AS x
+  )
+SELECT x AS ga_session_number
+FROM numbers;
