@@ -1,0 +1,8 @@
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Dimensions.02_session_engaged` AS
+WITH
+  engaged AS (
+    SELECT x
+    FROM UNNEST(GENERATE_ARRAY(0, 1, 1)) AS x
+  )
+SELECT x AS session_engaged
+FROM engaged;
