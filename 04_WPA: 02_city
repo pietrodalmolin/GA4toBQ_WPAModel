@@ -1,0 +1,5 @@
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Dimensions.02_city`
+AS
+SELECT distinct(city) as city FROM `steam-mantis-108908.WPA_Tables.00_Sessions`
+WHERE city IS NOT NULL
+ORDER BY city ASC
