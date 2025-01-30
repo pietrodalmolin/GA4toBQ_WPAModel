@@ -93,7 +93,7 @@ In BigQuery, you will find three datasets:
 - **02_WPA: SB_BetHistoryClick**  
   This query creates a table for the GA4 event "SB Bet History Click". 
 
-- **02_WPA: SB_BetShare**  
+- **02_WPA: SB_LinkClick**  
   This query creates a table for the GA4 event "SB Bet Share". 
 
 - **02_WPA: SB_BurgerMenu**  
