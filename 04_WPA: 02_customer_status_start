@@ -1,0 +1,8 @@
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Dimensions.02_customer_status_start` AS
+WITH customer_status AS (
+  SELECT 'Existing Customer' AS customer_status_start
+  UNION ALL
+  SELECT 'Prospect'
+)
+SELECT customer_status_start
+FROM customer_status;
