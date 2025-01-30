@@ -1,4 +1,4 @@
-CREATE TABLE `steam-mantis-108908.WPA_Tables.00_Sessions`
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Tables.00_Sessions`
 PARTITION BY DATE(Date)
 CLUSTER BY property_id, IsSportsbook, IsGaming AS
 (
@@ -8,7 +8,7 @@ wpa.property_id,wpa.date,CONCAT(wpa.user_pseudo_id, ga_session_id) AS session_id
 --TRAFFIC
 ,MAX(lnd.lnd_source) as lnd_source,MAX(lnd.lnd_medium) as lnd_medium,MAX(collected_traffic_source.manual_source) as lc_source,MAX(collected_traffic_source.manual_medium) as lc_medium,MAX(lnd.channel_grouping) as channel_grouping
 --GLOBAL DIMENSIONS
-,MIN(ga_session_number) AS ga_session_number,MAX(session_engaged) AS session_engaged,TIMESTAMP_DIFF(TIMESTAMP_MICROS(MAX(event_timestamp)), TIMESTAMP_MICROS(MIN(event_timestamp)), SECOND) AS session_length,MAX(Interface_Brand) AS Interface_Brand,MAX(CASE WHEN event_name = 'session_start' THEN Customer_Status_Start END) AS Customer_Status_Start,MAX(CASE WHEN event_name = 'session_start' THEN geo.city END) AS city,MAX(CASE WHEN event_name = 'session_start' THEN geo.continent END) AS continent,MAX(CASE WHEN event_name = 'session_start' THEN geo.country END) AS country,MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) AS region,MAX(CASE WHEN event_name = 'session_start' THEN device.mobile_brand_name END) AS mobile_brand_name,MAX(CASE WHEN event_name = 'session_start' THEN device.browser END) AS device_browser,MAX(CASE WHEN event_name = 'session_start' THEN device.browser_version END) AS device_browser_version,MAX(CASE WHEN event_name = 'session_start' THEN device.category END) AS device_category,MAX(CASE WHEN event_name = 'session_start' THEN device.mobile_marketing_name END) AS mobile_marketing_name,MAX(CASE WHEN event_name = 'session_start' THEN device.mobile_model_name END) AS mobile_model_name,MAX(CASE WHEN event_name = 'session_start' THEN device.operating_system END) AS device_operating_system,MAX(CASE WHEN event_name = 'session_start' THEN device.operating_system_version END) AS device_operating_system_version,CASE WHEN MAX(CASE WHEN Login_Status = 'LoggedIn' THEN 1 ELSE 0 END) = 1 THEN 'LoggedIn' ELSE 'LoggedOut' END AS Login_Status
+,MIN(ga_session_number) AS ga_session_number,MAX(session_engaged) AS session_engaged,TIMESTAMP_DIFF(TIMESTAMP_MICROS(MAX(event_timestamp)), TIMESTAMP_MICROS(MIN(event_timestamp)), SECOND) AS session_length,MAX(Interface_Brand) AS Interface_Brand,MAX(CASE WHEN event_name = 'session_start' THEN Customer_Status_Start END) AS Customer_Status_Start,MAX(CASE WHEN event_name = 'session_start' THEN geo.city END) AS city,MAX(CASE WHEN event_name = 'session_start' THEN geo.continent END) AS continent,MAX(CASE WHEN event_name = 'session_start' THEN geo.country END) AS country,MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) AS region,MAX(CASE WHEN event_name = 'session_start' THEN device.mobile_brand_name END) AS mobile_brand_name,MAX(CASE WHEN event_name = 'session_start' THEN device.web_info.browser END) AS device_web_info_browser,MAX(CASE WHEN event_name = 'session_start' THEN device.web_info.browser_version END) AS device_web_info_browser_version,MAX(CASE WHEN event_name = 'session_start' THEN device.category END) AS device_category,MAX(CASE WHEN event_name = 'session_start' THEN device.mobile_marketing_name END) AS mobile_marketing_name,MAX(CASE WHEN event_name = 'session_start' THEN device.mobile_model_name END) AS mobile_model_name,MAX(CASE WHEN event_name = 'session_start' THEN device.operating_system END) AS device_operating_system,MAX(CASE WHEN event_name = 'session_start' THEN device.operating_system_version END) AS device_operating_system_version,CASE WHEN MAX(CASE WHEN Login_Status = 'LoggedIn' THEN 1 ELSE 0 END) = 1 THEN 'LoggedIn' ELSE 'LoggedOut' END AS Login_Status
 --VERTICAL SPLIT
 ,CASE WHEN MAX(CASE WHEN REGEXP_CONTAINS(content_group, r'(CASINO|LIVE_CASINO|JACKPOTS|SLOTS)') THEN 1 ELSE 0 END) = 1 THEN 1 ELSE 0 END AS IsGaming
 ,CASE WHEN MAX(CASE WHEN event_name LIKE '%Sportsbook%' OR Content_Group LIKE '%SPORTSBOOK%' THEN 1 ELSE 0 END) = 1 THEN 1 ELSE 0 END AS IsSportsbook
@@ -85,7 +85,7 @@ LEFT JOIN
 (SELECT session_id,lnd_source,lnd_medium,channel_grouping FROM `steam-mantis-108908.WPA_Tables.00_LastNonDirectTraffic` WHERE date <='2025-01-26'
 GROUP BY session_id,lnd_source,lnd_medium,channel_grouping) lnd ON CONCAT(wpa.user_pseudo_id, wpa.ga_session_id) = lnd.session_id
 
-WHERE wpa.date <='2025-01-26'
+WHERE wpa.date <='2025-01-28'
 AND CONCAT(wpa.user_pseudo_id, ga_session_id) IS NOT NULL
 
 GROUP BY
