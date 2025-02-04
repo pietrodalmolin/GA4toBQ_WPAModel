@@ -28,7 +28,7 @@ In BigQuery, you will find three datasets:
 - **02_WPA: 00_Sessions**  
   This query creates a table for Sessions. 
 
-- **02_WPA: 00_Sessions**  
+- **02_WPA: 00_Pageviews**  
   This query creates a table for Pageviews. 
 
 - **02_WPA: CA_LoginFormOpen**  
