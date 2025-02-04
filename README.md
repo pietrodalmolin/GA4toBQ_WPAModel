@@ -6,9 +6,7 @@ In BigQuery, you will find three datasets:
 - **WPA:** `steam-mantis-108908.WPA`  
   Contains tables where each table represents a GA4 property. The tables are named according to their respective property IDs, and the source data is pulled from `steam-mantis-108908.analytics_*`.  
 - **WPA_Tables:** `steam-mantis-108908.WPA_Tables`  
-  Includes tables for each GA4 event, as well as a table for sessions. These tables are derived from the `steam-mantis-108908.WPA` dataset, utilizing the data contained there.  
-- **WPA_Views:** `steam-mantis-108908.WPA_Views`  
-  Consists of views that correspond to the event tables in `steam-mantis-108908.WPA_Tables`. These views filter data for the previous day only and serve as the data source for Power BI imports.  
+  Includes tables for each GA4 event, as well as a table for sessions. These tables are derived from the `steam-mantis-108908.WPA` dataset, utilizing the data contained there.   
 
 ## Queries  
 ### **WPA:** `steam-mantis-108908.WPA`  
