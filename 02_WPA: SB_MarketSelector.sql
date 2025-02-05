@@ -1,4 +1,4 @@
-CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Tables.SB_WidgetClick`
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Tables.SB_MarketSelector`
 PARTITION BY DATE(Date)
 CLUSTER BY property_id, event_name, eventaction AS
  (
