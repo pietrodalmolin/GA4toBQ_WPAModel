@@ -1,3 +1,6 @@
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Tables.CA_NRC`
+PARTITION BY DATE(Date)
+CLUSTER BY property_id, event_name, eventaction AS
  (
  SELECT
 --SESSION LEVEL COLUMNS
@@ -9,7 +12,6 @@ property_id,date,CONCAT(user_pseudo_id, ga_session_id) AS session_id,user_pseudo
 --EVENT SPECIFIC DIMENSIONS
 ,Registration_Type
 ,User_Reg_Method
-,Interface_Component
 ,User_Reg_Step
 --METRICS
 ,COUNT(*) AS Event_Count
@@ -25,7 +27,7 @@ ON CONCAT(wpa.user_pseudo_id, wpa.ga_session_id) = lnd.session_id
 WHERE wpa.date<='2025-02-22'
 --EVENT FILTERS
 AND Event_Name='Registration_Funnel'
-AND EventAction='Registration Submit'
+AND EventAction='NRC'
 
 GROUP BY
 --SESSION LEVEL COLUMNS
@@ -37,6 +39,5 @@ property_id,date,CONCAT(user_pseudo_id, ga_session_id),user_pseudo_id,ga_session
 --EVENT SPECIFIC DIMENSIONS
 ,Registration_Type
 ,User_Reg_Method
-,Interface_Component
 ,User_Reg_Step
 )
