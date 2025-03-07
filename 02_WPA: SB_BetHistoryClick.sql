@@ -18,13 +18,13 @@ SELECT * FROM steam-mantis-108908.WPA.270389480 UNION ALL SELECT * FROM steam-ma
 ) wpa
 
 WHERE wpa.date <='2025-01-28'
---EVENT FILTERS
-AND 
-(event_name='Clicks' AND interface_component LIKE 'My Account Click - secondary.history.sportsbook')
-OR
-(event_name='Sportsbook' AND eventaction='Burger Menu Click' AND interface_component LIKE 'primary.sportsbook.bet-history')
-OR
-(event_name='Sportsbook' AND EventAction='Full Bet History Click')
+    AND (
+        (event_name = 'Clicks' AND interface_component LIKE 'My Account Click - secondary.history.sportsbook')
+        OR
+        (event_name = 'Sportsbook' AND eventaction = 'Burger Menu Click' AND interface_component LIKE 'primary.sportsbook.bet-history')
+        OR
+        (event_name = 'Sportsbook' AND EventAction = 'Full Bet History Click')
+    )
 
 GROUP BY
 --SESSION LEVEL COLUMNS
