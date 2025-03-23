@@ -46,11 +46,13 @@ CAST(wpa.property_id AS INT64) AS property_id
 
 FROM `steam-mantis-108908.WPA.*` wpa
 LEFT JOIN 
-(SELECT session_id,lnd_source,lnd_medium,channel_grouping FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
-WHERE date <= '2025-03-19'
-GROUP BY session_id,lnd_source,lnd_medium,channel_grouping) lnd ON FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) = lnd.session_id
+(SELECT session_id,MAX(lnd_source) as lnd_source,MAX(lnd_medium) as lnd_medium,MAX(channel_grouping) as channel_grouping FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
+WHERE date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY))
+GROUP BY session_id) lnd
+ON FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) = lnd.session_id
 
-WHERE wpa.date <= '2025-03-19'
+WHERE wpa.date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY))
+AND CONCAT(wpa.user_pseudo_id, ga_session_id) IS NOT NULL
 
 GROUP BY
 wpa.date, wpa.property_id, session_id, wpa.user_pseudo_id
