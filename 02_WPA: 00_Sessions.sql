@@ -43,12 +43,73 @@ CAST(wpa.property_id AS INT64) AS property_id
 ,CASE WHEN MAX(CASE WHEN LOWER(Sub_Area) = 'game categories' THEN 1 ELSE 0 END) = 1 THEN 1 ELSE 0 END AS isGameCategories
 ,CASE WHEN MAX(CASE WHEN LOWER(EventAction) = 'game played for real' THEN 1 ELSE 0 END) = 1 THEN 1 ELSE 0 END AS IsReal
 ,CASE WHEN MAX(CASE WHEN LOWER(EventAction) = 'game played for fun' THEN 1 ELSE 0 END) = 1 THEN 1 ELSE 0 END AS IsForFun
+--TIME TO CONVERSION
+,TIMESTAMP_DIFF(
+  TIMESTAMP_MICROS(MIN(CASE WHEN event_name = 'Login_Funnel' AND EventAction='Login Form Open' THEN event_timestamp ELSE NULL END)),
+  TIMESTAMP_MICROS(MIN(event_timestamp)),SECOND) 
+  AS TTC_LoginFormOpen
+,TIMESTAMP_DIFF(
+  TIMESTAMP_MICROS(MIN(CASE WHEN event_name = 'Login_Funnel' AND EventAction LIKE 'Login Success%' THEN event_timestamp ELSE NULL END)),
+  TIMESTAMP_MICROS(MIN(event_timestamp)),SECOND) 
+  AS TTC_LoginSuccess
+,TIMESTAMP_DIFF(
+  TIMESTAMP_MICROS(MIN(CASE WHEN event_name = 'Sportsbook' AND (LOWER(EventAction) LIKE '%add to betslip%' OR LOWER(EventAction) LIKE '%add to bet slip%') THEN event_timestamp ELSE NULL END)),
+  TIMESTAMP_MICROS(MIN(event_timestamp)),SECOND) 
+  AS TTC_AddtoBetslip
+,TIMESTAMP_DIFF(
+  TIMESTAMP_MICROS(MIN(CASE WHEN Event_Name='Sportsbook' AND EventAction='Place Bet Click' THEN event_timestamp ELSE NULL END)),
+  TIMESTAMP_MICROS(MIN(event_timestamp)),SECOND) 
+  AS TTC_PlaceBetClick
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name = 'Registration_Funnel' AND EventAction LIKE 'Registration Form Open' THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(event_timestamp)),SECOND)
+    AS TTC_Reg_Form_Open
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name = 'Registration_Funnel' AND User_Reg_Step = "Step 1 (personal group - name)" THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name = 'Registration_Funnel' AND EventAction LIKE 'Registration Form Open' THEN event_timestamp ELSE NULL END)),SECOND)
+    AS TTC_Step1
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 2 (personal group - password)" THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name = 'Registration_Funnel' AND User_Reg_Step = "Step 1 (personal group - name)" THEN event_timestamp ELSE NULL END)),SECOND)
+    AS TTC_Step2
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 3 (address group - address)" THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 2 (personal group - password)" THEN event_timestamp ELSE NULL END)),SECOND)
+    AS TTC_Step3
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 4 (extra group - phone)" THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 3 (address group - address)" THEN event_timestamp ELSE NULL END)),SECOND)
+    AS TTC_Step4
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 5 (extra group - additional)" THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 4 (extra group - phone)" THEN event_timestamp ELSE NULL END)),SECOND)
+    AS TTC_Step5
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 6 (extra group - deposit-limit)" THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 5 (extra group - additional)" THEN event_timestamp ELSE NULL END)),SECOND)
+    AS TTC_Step6
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN eventaction = 'NRC' THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name= 'Registration_Funnel' AND User_Reg_Step = "Step 6 (extra group - deposit-limit)" THEN event_timestamp ELSE NULL END)),SECOND)
+    AS TTC_NRC
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN event_name = 'Payments' AND EventAction LIKE 'Open Deposit Page' THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(event_timestamp)),SECOND)
+    AS TTC_Open_Deposit_Page
+,TIMESTAMP_DIFF(
+    TIMESTAMP_MICROS(MIN(CASE WHEN eventaction = 'NDC' THEN event_timestamp ELSE NULL END)),
+    TIMESTAMP_MICROS(MIN(CASE WHEN eventaction = 'NRC' THEN event_timestamp ELSE NULL END)),SECOND)
+    AS TTC_NDC
 
 FROM `steam-mantis-108908.WPA.*` wpa
 LEFT JOIN 
-(SELECT session_id,lnd_source,lnd_medium,channel_grouping FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
+(SELECT session_id,MAX(lnd_source) as lnd_source,MAX(lnd_medium) as lnd_medium,MAX(channel_grouping) as channel_grouping FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
+WHERE date <='2025-03-21'
+GROUP BY session_id) lnd
+ON FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) = lnd.session_id
 
-GROUP BY session_id,lnd_source,lnd_medium,channel_grouping) lnd ON FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) = lnd.session_id
+WHERE wpa.date <='2025-03-21'
+AND CONCAT(wpa.user_pseudo_id, ga_session_id) IS NOT NULL
 
 GROUP BY
 wpa.date, wpa.property_id, session_id, wpa.user_pseudo_id
