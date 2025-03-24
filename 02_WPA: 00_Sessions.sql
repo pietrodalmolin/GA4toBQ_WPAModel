@@ -24,8 +24,8 @@ CAST(wpa.property_id AS INT64) AS property_id
 ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN geo.country END), ''), 'Unknown')), 100000)) AS Key_country
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN geo.region END), ''), 'Unknown'))) AS Key_region
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN device.mobile_brand_name END), ''), 'Unknown'))) AS Key_mobile_brand_name
-,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN device.browser END), ''), 'Unknown'))) AS Key_device_browser
-,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN device.browser_version END), ''), 'Unknown'))) AS Key_device_browser_version
+,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN device.web_info.browser END), ''), 'Unknown'))) AS Key_device_web_info_browser
+,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN device.web_info.browser_version END), ''), 'Unknown'))) AS Key_device_web_info_browser_version
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN device.category END), ''), 'Unknown'))) AS Key_device_category
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN device.mobile_marketing_name END), ''), 'Unknown'))) AS Key_mobile_marketing_name
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(MAX(CASE WHEN event_name = 'session_start' THEN device.mobile_model_name END), ''), 'Unknown'))) AS Key_mobile_model_name
@@ -46,13 +46,9 @@ CAST(wpa.property_id AS INT64) AS property_id
 
 FROM `steam-mantis-108908.WPA.*` wpa
 LEFT JOIN 
-(SELECT session_id,MAX(lnd_source) as lnd_source,MAX(lnd_medium) as lnd_medium,MAX(channel_grouping) as channel_grouping FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
-WHERE date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY))
-GROUP BY session_id) lnd
-ON FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) = lnd.session_id
+(SELECT session_id,lnd_source,lnd_medium,channel_grouping FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
 
-WHERE wpa.date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY))
-AND CONCAT(wpa.user_pseudo_id, ga_session_id) IS NOT NULL
+GROUP BY session_id,lnd_source,lnd_medium,channel_grouping) lnd ON FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) = lnd.session_id
 
 GROUP BY
 wpa.date, wpa.property_id, session_id, wpa.user_pseudo_id
