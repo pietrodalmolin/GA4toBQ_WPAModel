@@ -5,16 +5,57 @@ DECLARE idx INT64 DEFAULT 0;
 
 -- Initialize property IDs
 SET property_ids = [
-    '270389480', '345721586', '282392101', '326546621', '326546361',
-    '326547182', '326497634', '344917462', '270369193', '323032716',
-    '369344384', '326671725', '326660191', '326408170', '326649423',
-    '270372273', '326629578', '326650420', '344980665', '326624957',
-    '270382730', '435048955', '216367908', '270372101', '282543507',
-    '282510694', '270352833', '270382267', '270412437', '347097957',
-    '346483255', '270361811', '270410004', '326628458', '346955191',
-    '270391072', '270400311', '282401733', '326507697', '270380201',
-    '346480383', '270354118', '347130828', '347145362', '347121847',
-    '347189984', '346938887', '216807831', '270355736', '346970928'
+    '270389480', -- ALOHASHARK GA4 [WEB] 
+    '345721586', -- BETBONANZA GA4 [WEB] 
+    '282392101', -- BETS10 GA4 [WEB]
+    '326546621', -- BETSAFE ESTONIA GA4 [WEB]
+    '326546361', -- BETSAFE KENYA GA4 [WEB]
+    '326547182', -- BETSAFE LATVIA GA4 [WEB]
+    '326497634', -- BETSAFE LITHUANIA GA4 [WEB]
+    '344917462', -- BETSAFE PERU GA4 [WEB]
+    '270369193', -- BETSAFE.COM GA4 [WEB]
+    '323032716', -- BETSSON ARGENTINA GA4 [WEB]
+    '369344384', -- BETSSON BELGIUM GA4 [WEB]
+    '326671725', -- BETSSON BRAZIL GA4 [WEB]
+    '326660191', -- BETSSON COLOMBIA GA4 [WEB]
+    '326408170', -- BETSSON CZECH [WEB]
+    '326649423', -- BETSSON GREECE GA4 [WEB]
+    '270372273', -- BETSSON IT GA4 [WEB]
+    '326629578', -- BETSSON MEXICO GA4 [WEB]
+    '326650420', -- BETSSON NETHERLANDS GA4 [WEB]
+    '344980665', -- BETSSON PERU GA4 [WEB]
+    '326624957', -- BETSSON SPAIN GA4 [WEB]
+    '270382730', -- BETSSON.COM GA4 [WEB]
+    '435048955', -- BETSSON.KZ GA4 [WEB]
+    '216367908', -- BETSSONDK GA4 [WEB]
+    '270372101', -- CASINOEURO GA4 [WEB]
+    '282543507', -- CasinoMaxi GA4 [WEB]
+    '282510694', -- CasinoMetropol GA4 [WEB]
+    '270352833', -- CASINOWINNER GA4 [WEB]
+    '270382267', -- EUROCASINO GA4 [WEB]
+    '270412437', -- EUROPEBET GA4 [WEB]
+    '347097957', -- GUTS GA4 [WEB]
+    '346483255', -- INKABET GA4 [WEB]
+    '462436475', -- BETSSON PARAGUAY [WEB]
+    '270410004', -- JALLACASINO SE GA4 [WEB]
+    '326628458', -- JALLACASINO.EE (ex SUPERCASINO.EE) GA4 [WEB]
+    '346955191', -- KABOO GA4 [WEB]
+    '270391072', -- LIVEROULETTE GA4 [WEB]
+    '270400311', -- LOYALCASINO GA4 [WEB]
+    '282401733', -- MOBILBAHIS GA4 [WEB]
+    '326507697', -- NORDICBET DK GA4 [WEB]
+    '270380201', -- NORDICBET.COM GA4 [WEB]
+    '346480383', -- NORGESAUTOMATEN GA4 [WEB] 
+    '270354118', -- RACEBETS GA4 [WEB]
+    '347130828', -- RIZK POLAND GA4 [WEB]
+    '347145362', -- RIZK.COM GA4 [WEB]
+    '347121847', -- RIZK.HR GA4 [WEB]
+    '347189984', -- RIZK.RS GA4 [WEB]
+    '346938887', -- RIZKSLOTS.DE GA4 [WEB]
+    '216807831', -- STARCASINO GA4 [WEB]
+    '270355736', -- SUPERCASINO.COM GA4 [WEB]
+    '346970928', -- THRILLS.COM GA4 [WEB]
+    '479948234' -- CRASHCASINO GA4 [WEB]
 ];
 
 -- Loop through each property ID using an index
@@ -84,7 +125,12 @@ LOOP
           ,(SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Interface_BannerPositon') AS Interface_BannerPositon
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Interface_Brand') AS Interface_Brand
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Interface_CardClicked') AS Interface_CardClicked
-          ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Interface_Component') AS Interface_Component
+          ,COALESCE(
+          (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Interface_Component'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Interface_Component') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Interface_Component') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Interface_Component') AS STRING)
+          ) AS Interface_Component
           ,COALESCE( (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Interface_SearchTerm'), 
             CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Interface_SearchTerm') AS STRING),
             CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Interface_SearchTerm') AS STRING),
@@ -138,7 +184,12 @@ LOOP
           ,(SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Slide_Number') AS Slide_Number
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'source') AS source
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_BetType') AS Sportsbook_BetType
-          ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_CategoryDetails') AS Sportsbook_CategoryDetails
+          ,COALESCE(
+          (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_CategoryDetails'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_CategoryDetails') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_CategoryDetails') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_CategoryDetails') AS STRING)
+          ) AS Sportsbook_CategoryDetails
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_CompetitionDetails') AS Sportsbook_CompetitionDetails
           ,(SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_CouponDetails') AS Sportsbook_CouponDetails
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_CouponType') AS Sportsbook_CouponType
@@ -153,7 +204,12 @@ LOOP
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_RememberStakeFlag') AS Sportsbook_RememberStakeFlag
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_TabName') AS Sportsbook_TabName
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_ViewType') AS Sportsbook_ViewType
-          ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sub_Area') AS Sub_Area
+          ,COALESCE(
+          (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sub_Area'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Sub_Area') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Sub_Area') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Sub_Area') AS STRING)
+          ) AS Sub_Area
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Technical_AdBlocker') AS Technical_AdBlocker
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Technical_Error') AS Technical_Error
           ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Technical_EventName') AS Technical_EventName
