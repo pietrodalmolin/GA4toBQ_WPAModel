@@ -1,5 +1,0 @@
-CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Dimensions.02_region`
-AS
-SELECT distinct(TRIM(INITCAP(region))) as region FROM `steam-mantis-108908.WPA_Tables.00_Sessions`
-WHERE region IS NOT NULL AND region<>''
-ORDER BY region ASC
