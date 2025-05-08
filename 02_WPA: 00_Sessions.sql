@@ -1,6 +1,4 @@
-CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Events.00_Sessions`
-PARTITION BY DATE(Date)
-CLUSTER BY Key_Interface_Brand, IsSportsbook, IsGaming AS
+INSERT INTO `steam-mantis-108908.WPA_Events.00_Sessions`
 (
 SELECT
 --KEYS
@@ -100,15 +98,80 @@ CAST(wpa.property_id AS INT64) AS property_id
     TIMESTAMP_MICROS(MIN(CASE WHEN eventaction = 'NDC' THEN event_timestamp ELSE NULL END)),
     TIMESTAMP_MICROS(MIN(CASE WHEN eventaction = 'NRC' THEN event_timestamp ELSE NULL END)),SECOND)
     AS TTC_NDC
+--CUSTOM DIMENSIONS
+,CAST(ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(
+(--BETSSON
+CASE 
+WHEN MAX(Interface_Brand) = 'Betsson' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) IN ('Netherlands', 'Spain', 'Belgium', 'Germany', 'Switzerland', 'Austria') THEN 'WESTERN & SOUTHERN EUROPE'
+WHEN MAX(Interface_Brand) = 'Betsson' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) IN ('Sweden', 'Norway', 'Denmark', 'Finland', 'Iceland') THEN 'NORDICS'
+WHEN MAX(Interface_Brand) = 'Betsson' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) IN ('Bolivia', 'Colombia', 'Paraguay', 'Ecuador', 'Chile', 'Peru', 'Mexico', 'Brazil', 'Argentina') THEN 'LATAM'
+WHEN MAX(Interface_Brand) = 'Betsson' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) IN ('Poland', 'Latvia', 'Hungary', 'Serbia') THEN 'CEECA'
+WHEN MAX(Interface_Brand) = 'Betsson' THEN 'EMERGING MARKETS'
+--BETSAFE
+WHEN MAX(Interface_Brand) = 'Betsafe' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) IN ('Poland', 'Russia', 'Hungary', 'Latvia', 'Serbia') THEN 'CEECA'
+WHEN MAX(Interface_Brand) = 'Betsafe' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) IN ('Mexico', 'Brazil', 'Peru', 'Chile') THEN 'LATAM'
+WHEN MAX(Interface_Brand) = 'Betsafe' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) IN ('Sweden', 'Norway', 'Iceland', 'Finland') THEN 'NORDICS'
+WHEN MAX(Interface_Brand) = 'Betsafe' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) = 'Canada' THEN 'US & CANADA'
+WHEN MAX(Interface_Brand) = 'Betsafe' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) IN ('Switzerland', 'Netherlands', 'Belgium', 'Spain', 'Austria', 'Germany') THEN 'WESTERN & SOUTHERN EUROPE'
+WHEN MAX(Interface_Brand) = 'Betsafe' THEN 'EMERGING MARKETS'
+--CasinoEuro
+WHEN MAX(Interface_Brand) = 'CasinoEuro' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) = 'Finland' THEN 'NORDICS'
+WHEN MAX(Interface_Brand) = 'CasinoEuro' THEN 'EMERGING MARKETS'
+--EuroCasino
+WHEN MAX(Interface_Brand) = 'EuroCasino' AND MAX(CASE WHEN event_name = 'session_start' THEN geo.region END) = 'Finland' THEN 'NORDICS'
+WHEN MAX(Interface_Brand) = 'EuroCasino' THEN 'EMERGING MARKETS'
+-- LATAM brands
+WHEN MAX(Interface_Brand) IN (
+'BetssonArgentina', 'BetssonArgentinaPBA', 'Inkabet', 'BetssonCO', 'BetssonPE',
+'BetssonArgentinaCDA', 'BetssonArgentinaCBA', 'BetsafePE', 'BetssonBR',
+'NordicBet', 'BetssonMX', 'BetssonPY'
+) THEN 'LATAM'
+-- WESTERN & SOUTHERN EUROPE
+WHEN MAX(Interface_Brand) IN (
+'BetssonGR', 'Betsson ES', 'RaceBets', 'BetssonSpain', 'RaceBetsDE', 'BetssonBE'
+) THEN 'WESTERN & SOUTHERN EUROPE'
+-- ITALY
+WHEN MAX(Interface_Brand) IN (
+'BetssonIT', 'StarCasino', 'BingoIT'
+) THEN 'ITALY'
+-- CEECA
+WHEN MAX(Interface_Brand) IN (
+'BetsafeBaltics', 'BetssonKZ', 'JallaCasinoEE', 'SuperCasinoEE'
+) THEN 'CEECA'
+-- NORDICS
+WHEN MAX(Interface_Brand) IN (
+'NordicBetDk', 'JallaCasino', 'CasinoDk', 'NorgesAutomaten'
+) THEN 'NORDICS'
+-- ZECURE
+WHEN MAX(Interface_Brand) IN (
+'RizkHR', 'RizkRS', 'CrashCasino', 'Guts.com', 'Rizk.com', 'Kaboo', 'RizkDE', 'RizkPL'
+) THEN 'ZECURE'
+-- REALM
+WHEN MAX(Interface_Brand) IN (
+'Bets10', 'MobilBahis', 'CasinoMaxi', 'CasinoMetropol'
+) THEN 'REALM'
+-- ALTA
+WHEN MAX(Interface_Brand) IN (
+'BetSolid', 'ArcticBet', 'BetSmith'
+) THEN 'ALTA'
+-- EUROPEBET
+WHEN MAX(Interface_Brand) = 'EuropeBet' THEN 'EUROPEBET'
+-- AFRICA
+WHEN MAX(Interface_Brand) = 'BetsafeKenya' THEN 'AFRICA'
+-- EMERGING MARKETS
+WHEN MAX(Interface_Brand) = 'SuperCasino' THEN 'EMERGING MARKETS'
+ELSE 'Unassigned' END)
+, ''), 'Unknown')), 100000))AS INT64)
+AS Key_COMMERCIAL_AREA
 
 FROM `steam-mantis-108908.WPA.*` wpa
 LEFT JOIN 
 (SELECT session_id,MAX(lnd_source) as lnd_source,MAX(lnd_medium) as lnd_medium,MAX(channel_grouping) as channel_grouping FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
-WHERE date <='2025-03-21'
+WHERE date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY))
 GROUP BY session_id) lnd
 ON FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) = lnd.session_id
 
-WHERE wpa.date <='2025-03-21'
+WHERE wpa.date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY))
 AND CONCAT(wpa.user_pseudo_id, ga_session_id) IS NOT NULL
 
 GROUP BY
