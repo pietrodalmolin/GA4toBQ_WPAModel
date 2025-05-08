@@ -1,6 +1,0 @@
-CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Dimensions.02_page_title`
-AS
-SELECT DISTINCT(TRIM(LOWER(REGEXP_REPLACE(page_title, '[^A-Za-z0-9Α-Ωα-ω ]', '')))) AS page_title FROM `steam-mantis-108908.WPA_Tables.00_Pageviews`
-WHERE TRIM(LOWER(REGEXP_REPLACE(page_title, '[^A-Za-z0-9Α-Ωα-ω ]', ''))) IS NOT NULL AND TRIM(LOWER(REGEXP_REPLACE(page_title, '[^A-Za-z0-9Α-Ωα-ω ]', '')))<>''
-AND (Content_Group='BLOG' OR Content_GROUP LIKE 'PROMOTIONS%')
-ORDER BY page_title ASC
