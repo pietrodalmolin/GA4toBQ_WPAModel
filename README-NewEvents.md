@@ -82,8 +82,30 @@ In the `GROUP BY` section:
 
 ---
 
-## 🧠 Final Tip
+## 🔁 Instructions: How to Set Up the Refresh Table
 
-Be methodical and double-check that all fields and filters align with your event logic. A clean and optimized query helps ensure efficient processing and scalable table maintenance.
+Once your event table has been created, you'll also need to **schedule refreshes** to keep the data up to date.
+
+### 1. **Choose the Appropriate Refresh Template**
+Use the same template (A or B) that you used for the event table creation:
+- `000_A_refresh_event` (for template A)
+- `000_B_refresh_event` (for template B)
 
 ---
+
+### 2. **Copy the Original Query**
+Start by copying the **same query** you used to create the event table.
+
+---
+
+### 3. **Apply the Following Changes**
+
+- Replace the `CREATE OR REPLACE TABLE ... AS` statement with:
+
+  ```sql
+  INSERT INTO `steam-mantis-108908.WPA_Events.TABLE NAME`
+
+- Update the date filter to fetch only data for two days ago:
+
+  ```sql
+  WHERE date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY))
