@@ -61,7 +61,7 @@ CAST(wpa.property_id AS INT64) AS property_id
 ,COUNT(*) AS Event_Count
 
 FROM 
---ALL PROPERTIES (THIS LIST MUST BE KEPT UPDATED !!)
+--*(3)
 (SELECT * FROM steam-mantis-108908.WPA.270389480 UNION ALL -- ALOHASHARK GA4 [WEB] 
 SELECT * FROM steam-mantis-108908.WPA.345721586 UNION ALL -- BETBONANZA GA4 [WEB] 
 SELECT * FROM steam-mantis-108908.WPA.282392101 UNION ALL -- BETS10 GA4 [WEB]
@@ -124,14 +124,14 @@ AND wpa.geo.country=ca.country
 LEFT JOIN 
 (SELECT session_id,MAX(lnd_source) as lnd_source,MAX(lnd_medium) as lnd_medium,MAX(channel_grouping) as channel_grouping 
 FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
-WHERE date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)) --*(3)
+WHERE date <= '2025-05-01' --*(4)
 GROUP BY session_id) lnd
 ON FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) = lnd.session_id
 
 --DATE FILTER
-WHERE wpa.date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)) --*(3)
+WHERE wpa.date <= '2025-05-01' --*(4)
 
---EVENT FILTERS *(4)
+--EVENT FILTERS *(5)
 AND Event_Name='Registration_Funnel'    /*EXAMPLE FOR NRC*/
 AND EventAction='NRC'                   /*EXAMPLE FOR NRC*/
 
@@ -144,7 +144,7 @@ property_id,date,FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)),FAR
 ,Content_Group,event_name,EventAction,Customer_Status_Event,device.web_info.hostname,Login_Status,page_location,page_referrer,page_title,Technical_EventName,Technical_PlatformName,Technical_PlatformUsed, Technical_ScreenOrientation,Technical_ScreenResolution,User_CustomerLevel,Sub_Area
 --CUSTOM DIMENSIONS
 ,COMMERCIAL_AREA
---EVENT SPECIFIC DIMENSIONS *(5)
+--EVENT SPECIFIC DIMENSIONS *(6)
 ,Registration_Type                /*EXAMPLE FOR NRC*/
 ,User_Reg_Method                  /*EXAMPLE FOR NRC*/
 ,User_Reg_Step                    /*EXAMPLE FOR NRC*/
