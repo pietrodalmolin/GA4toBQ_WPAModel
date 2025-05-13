@@ -8,7 +8,7 @@ CAST(wpa.property_id AS INT64) AS property_id
 ,FARM_FINGERPRINT(wpa.user_pseudo_id) AS user_pseudo_id
 ,ga_session_number AS Key_ga_session_number
 ,CAST(session_engaged AS INT64) AS Key_session_engaged
-,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(Interface_Brand, ''), 'Unknown')), 100000)) AS Key_Interface_Brand
+,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(wpa.Interface_Brand, ''), 'Unknown')), 100000)) AS Key_Interface_Brand
 ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(Customer_Status_Start, ''), 'Unknown')), 100000)) AS Key_Customer_Status_Start
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(geo.city, ''), 'Unknown'))) AS Key_city
 ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(geo.country, ''), 'Unknown')), 100000)) AS Key_country
@@ -44,70 +44,7 @@ CAST(wpa.property_id AS INT64) AS property_id
 --CUSTOM DIMENSIONS
 ,REGEXP_EXTRACT(Page_Location, r'^(?:https?://)?([^/]+/[a-z]{2}/(?:blog(?:as|s|i|g|g|)?)|[^/]+/(?:blog|jalla-news))') as BlogName
 ,TIMESTAMP_DIFF((LEAD(TIMESTAMP_MICROS(event_timestamp)) OVER (PARTITION BY CONCAT(wpa.user_pseudo_id, ga_session_id) ORDER BY TIMESTAMP_MICROS(event_timestamp))), TIMESTAMP_MICROS(event_timestamp), SECOND) AS TimeonPage
-,CAST(ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(
-(--BETSSON
-CASE 
-WHEN Interface_Brand = 'Betsson' AND geo.country IN ('Netherlands', 'Spain', 'Belgium', 'Germany', 'Switzerland', 'Austria') THEN 'WESTERN & SOUTHERN EUROPE'
-WHEN Interface_Brand = 'Betsson' AND geo.country IN ('Sweden', 'Norway', 'Denmark', 'Finland', 'Iceland') THEN 'NORDICS'
-WHEN Interface_Brand = 'Betsson' AND geo.country IN ('Bolivia', 'Colombia', 'Paraguay', 'Ecuador', 'Chile', 'Peru', 'Mexico', 'Brazil', 'Argentina') THEN 'LATAM'
-WHEN Interface_Brand = 'Betsson' AND geo.country IN ('Poland', 'Latvia', 'Hungary', 'Serbia') THEN 'CEECA'
-WHEN Interface_Brand = 'Betsson' THEN 'EMERGING MARKETS'
---BETSAFE
-WHEN Interface_Brand = 'Betsafe' AND geo.country IN ('Poland', 'Russia', 'Hungary', 'Latvia', 'Serbia') THEN 'CEECA'
-WHEN Interface_Brand = 'Betsafe' AND geo.country IN ('Mexico', 'Brazil', 'Peru', 'Chile') THEN 'LATAM'
-WHEN Interface_Brand = 'Betsafe' AND geo.country IN ('Sweden', 'Norway', 'Iceland', 'Finland') THEN 'NORDICS'
-WHEN Interface_Brand = 'Betsafe' AND geo.country = 'Canada' THEN 'US & CANADA'
-WHEN Interface_Brand = 'Betsafe' AND geo.country IN ('Switzerland', 'Netherlands', 'Belgium', 'Spain', 'Austria', 'Germany') THEN 'WESTERN & SOUTHERN EUROPE'
-WHEN Interface_Brand = 'Betsafe' THEN 'EMERGING MARKETS'
---CasinoEuro
-WHEN Interface_Brand = 'CasinoEuro' AND geo.country = 'Finland' THEN 'NORDICS'
-WHEN Interface_Brand = 'CasinoEuro' THEN 'EMERGING MARKETS'
---EuroCasino
-WHEN Interface_Brand = 'EuroCasino' AND geo.country = 'Finland' THEN 'NORDICS'
-WHEN Interface_Brand = 'EuroCasino' THEN 'EMERGING MARKETS'
--- LATAM brands
-WHEN Interface_Brand IN (
-'BetssonArgentina', 'BetssonArgentinaPBA', 'Inkabet', 'BetssonCO', 'BetssonPE',
-'BetssonArgentinaCDA', 'BetssonArgentinaCBA', 'BetsafePE', 'BetssonBR',
-'NordicBet', 'BetssonMX', 'BetssonPY'
-) THEN 'LATAM'
--- WESTERN & SOUTHERN EUROPE
-WHEN Interface_Brand IN (
-'BetssonGR', 'Betsson ES', 'RaceBets', 'BetssonSpain', 'RaceBetsDE', 'BetssonBE'
-) THEN 'WESTERN & SOUTHERN EUROPE'
--- ITALY
-WHEN Interface_Brand IN (
-'BetssonIT', 'StarCasino', 'BingoIT'
-) THEN 'ITALY'
--- CEECA
-WHEN Interface_Brand IN (
-'BetsafeBaltics', 'BetssonKZ', 'JallaCasinoEE', 'SuperCasinoEE'
-) THEN 'CEECA'
--- NORDICS
-WHEN Interface_Brand IN (
-'NordicBetDk', 'JallaCasino', 'CasinoDk', 'NorgesAutomaten'
-) THEN 'NORDICS'
--- ZECURE
-WHEN Interface_Brand IN (
-'RizkHR', 'RizkRS', 'CrashCasino', 'Guts.com', 'Rizk.com', 'Kaboo', 'RizkDE', 'RizkPL'
-) THEN 'ZECURE'
--- REALM
-WHEN Interface_Brand IN (
-'Bets10', 'MobilBahis', 'CasinoMaxi', 'CasinoMetropol'
-) THEN 'REALM'
--- ALTA
-WHEN Interface_Brand IN (
-'BetSolid', 'ArcticBet', 'BetSmith'
-) THEN 'ALTA'
--- EUROPEBET
-WHEN Interface_Brand = 'EuropeBet' THEN 'EUROPEBET'
--- AFRICA
-WHEN Interface_Brand = 'BetsafeKenya' THEN 'AFRICA'
--- EMERGING MARKETS
-WHEN Interface_Brand = 'SuperCasino' THEN 'EMERGING MARKETS'
-ELSE 'Unassigned' END)
-, ''), 'Unknown')), 100000))AS INT64)
-AS Key_COMMERCIAL_AREA
+,CAST(ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF((COMMERCIAL_AREA), ''), 'Unknown')), 100000))AS INT64) AS Key_COMMERCIAL_AREA
 
 FROM (
 SELECT * FROM steam-mantis-108908.WPA.270389480 UNION ALL -- ALOHASHARK GA4 [WEB] 
@@ -162,6 +99,11 @@ SELECT * FROM steam-mantis-108908.WPA.346970928 UNION ALL -- THRILLS.COM GA4 [WE
 SELECT * FROM steam-mantis-108908.WPA.462436475 UNION ALL -- BETSSON PARAGUAY [WEB]
 SELECT * FROM steam-mantis-108908.WPA.479948234 -- CRASHCASINO GA4 [WEB]
 ) wpa
+
+--MAPPING WITH COMMERCIAL AREA
+LEFT JOIN `steam-mantis-108908.WPA_Keys.map_COMMERCIAL_AREA` ca
+ON wpa.interface_brand = ca.interface_brand
+AND wpa.geo.country=ca.country
 
 LEFT JOIN 
 (SELECT session_id,MAX(lnd_source) as lnd_source,MAX(lnd_medium) as lnd_medium,MAX(channel_grouping) as channel_grouping FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
