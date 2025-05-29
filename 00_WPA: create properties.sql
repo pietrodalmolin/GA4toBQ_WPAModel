@@ -211,7 +211,79 @@ LOOP
             CAST((SELECT value.float_value FROM UNNEST(user_properties) WHERE key = 'User_UniqueID') AS STRING),
             CAST((SELECT value.double_value FROM UNNEST(user_properties) WHERE key = 'User_UniqueID') AS STRING))
             AS User_UniqueID
-          ,(SELECT value.string_value FROM UNNEST(user_properties) WHERE key = 'User_UniqueID_User') AS User_UniqueID_User              
+          ,(SELECT value.string_value FROM UNNEST(user_properties) WHERE key = 'User_UniqueID_User') AS User_UniqueID_User
+
+          -- new added parameters, 28/05/2025
+
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Custom_Funnel'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Custom_Funnel') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Custom_Funnel') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Custom_Funnel') AS STRING)) AS Custom_Funnel
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'ElementClicked'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ElementClicked') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'ElementClicked') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'ElementClicked') AS STRING)) AS ElementClicked
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'ElementTotal'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ElementTotal') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'ElementTotal') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'ElementTotal') AS STRING)) AS ElementTotal
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'End_Date'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'End_Date') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'End_Date') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'End_Date') AS STRING)) AS End_Date
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'EventLabel'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'EventLabel') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'EventLabel') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'EventLabel') AS STRING)) AS EventLabel
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Filters_Applied'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Filters_Applied') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Filters_Applied') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Filters_Applied') AS STRING)) AS Filters_Applied
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Game_ID'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Game_ID') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Game_ID') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Game_ID') AS STRING)) AS Game_ID
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Interface_BannerPosition'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Interface_BannerPosition') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Interface_BannerPosition') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Interface_BannerPosition') AS STRING)) AS Interface_BannerPosition
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Optimizely_Exp_Event'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Optimizely_Exp_Event') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Optimizely_Exp_Event') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Optimizely_Exp_Event') AS STRING)) AS Optimizely_Exp_Event
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Optimizely_Exp_User'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Optimizely_Exp_User') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Optimizely_Exp_User') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Optimizely_Exp_User') AS STRING)) AS Optimizely_Exp_User
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'ParentMenu'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ParentMenu') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'ParentMenu') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'ParentMenu') AS STRING)) AS ParentMenu
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Payment_DepositFlow'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Payment_DepositFlow') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Payment_DepositFlow') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Payment_DepositFlow') AS STRING)) AS Payment_DepositFlow
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Payment_WithdrawalFlow'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Payment_WithdrawalFlow') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Payment_WithdrawalFlow') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Payment_WithdrawalFlow') AS STRING)) AS Payment_WithdrawalFlow
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Search_Provider'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Search_Provider') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Search_Provider') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Search_Provider') AS STRING)) AS Search_Provider
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sort_Applied'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Sort_Applied') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Sort_Applied') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Sort_Applied') AS STRING)) AS Sort_Applied
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_BetMarket'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_BetMarket') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_BetMarket') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Sportsbook_BetMarket') AS STRING)) AS Sportsbook_BetMarket
+          ,COALESCE((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'Start_Date'),
+          CAST((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'Start_Date') AS STRING),
+          CAST((SELECT value.float_value FROM UNNEST(event_params) WHERE key = 'Start_Date') AS STRING),
+          CAST((SELECT value.double_value FROM UNNEST(event_params) WHERE key = 'Start_Date') AS STRING)) AS Start_Date
+              
       FROM `steam-mantis-108908.analytics_%s.events_*`
       
       --selecting date range
