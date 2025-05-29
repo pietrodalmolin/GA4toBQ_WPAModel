@@ -123,7 +123,7 @@ AND EventAction='NRC'                   /*EXAMPLE FOR NRC*/
 
 GROUP BY
 --SESSION LEVEL COLUMNS
-property_id,date,FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)),FARM_FINGERPRINT(wpa.user_pseudo_id), GUID_Event, ga_session_number,session_engaged,wpa.Interface_Brand,Customer_Status_Start,geo.city,geo.country,geo.region,device.mobile_brand_name,device.web_info.browser,device.web_info.browser_version,device.category,device.mobile_marketing_name,device.mobile_model_name,device.operating_system,device.operating_system_version
+property_id,date,FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)),FARM_FINGERPRINT(wpa.user_pseudo_id), GUID_Event, ga_session_number,session_engaged,wpa.Interface_Brand,Customer_Status_Start,geo.city,geo.country,geo.region,device.mobile_brand_name,device.web_info.browser,device.web_info.browser_version,device.category,device.mobile_marketing_name,device.mobile_model_name,device.operating_system,device.operating_system_version,Technical_PlatformUsed
 --GLOBAL DIMENSIONS
 ,Content_Group,event_name,EventAction,Customer_Status_Event,device.web_info.hostname,Login_Status,page_location,page_referrer,page_title,Technical_EventName,Technical_PlatformName,Technical_PlatformUsed, Technical_ScreenOrientation,Technical_ScreenResolution,User_CustomerLevel,Sub_Area
 --CUSTOM DIMENSIONS
