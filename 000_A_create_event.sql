@@ -17,6 +17,7 @@ CAST(wpa.property_id AS INT64) AS property_id
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(geo.city, ''), 'Unknown'))) AS Key_city
 ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(geo.country, ''), 'Unknown')), 100000)) AS Key_country
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(geo.region, ''), 'Unknown'))) AS Key_region
+,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(Technical_PlatformUsed, ''), 'Unknown'))) AS Key_Technical_PlatformUsed
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.mobile_brand_name, ''), 'Unknown'))) AS Key_mobile_brand_name
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.web_info.browser, ''), 'Unknown'))) AS Key_device_web_info_browser
 ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.web_info.browser_version, ''), 'Unknown'))) AS Key_device_web_info_browser_version
@@ -45,7 +46,6 @@ CAST(wpa.property_id AS INT64) AS property_id
 ,page_title
 ,Technical_EventName
 ,Technical_PlatformName
-,Technical_PlatformUsed
 ,Technical_ScreenOrientation
 ,Technical_ScreenResolution
 ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(User_CustomerLevel, ''), 'Unknown')), 100000)) AS Key_User_CustomerLevel
