@@ -138,7 +138,7 @@ AND EventAction='NRC'                   /*EXAMPLE FOR NRC*/
 
 GROUP BY
 --SESSION LEVEL COLUMNS
-property_id,date,FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)),FARM_FINGERPRINT(wpa.user_pseudo_id), GUID_Event, ga_session_number,session_engaged,wpa.Interface_Brand,Customer_Status_Start,geo.city,geo.country,geo.region,device.mobile_brand_name,device.web_info.browser,device.web_info.browser_version,device.category,device.mobile_marketing_name,device.mobile_model_name,device.operating_system,device.operating_system_version
+property_id,date,FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)),FARM_FINGERPRINT(wpa.user_pseudo_id),ga_session_number,session_engaged,wpa.Interface_Brand,Customer_Status_Start,geo.city,geo.country,geo.region,device.mobile_brand_name,device.web_info.browser,device.web_info.browser_version,device.category,device.mobile_marketing_name,device.mobile_model_name,device.operating_system,device.operating_system_version, GUID_Event, Technical_PlatformUsed
 --TRAFFIC
 ,lnd_source,lnd_medium,collected_traffic_source.manual_source,collected_traffic_source.manual_medium,lnd.channel_grouping
 --GLOBAL DIMENSIONS
