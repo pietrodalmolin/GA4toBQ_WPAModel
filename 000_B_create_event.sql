@@ -1,4 +1,4 @@
-CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Events.TABLE NAME` --*(1)
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Events.TABLENAME` --*(1)
 PARTITION BY DATE(Date)
 CLUSTER BY Key_Interface_Brand AS
 (
