@@ -50,12 +50,12 @@ CAST(wpa.property_id AS INT64) AS property_id
 ,Technical_ScreenResolution
 ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(User_CustomerLevel, ''), 'Unknown')), 100000)) AS Key_User_CustomerLevel
 ,Sub_Area
---CUSTOM DIMENSIONS
-,CAST(ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF((COMMERCIAL_AREA), ''), 'Unknown')), 100000))AS INT64) AS Key_COMMERCIAL_AREA
 --EVENT SPECIFIC DIMENSIONS *(2)
 ,Registration_Type                /*EXAMPLE FOR NRC*/
 ,User_Reg_Method                  /*EXAMPLE FOR NRC*/
 ,User_Reg_Step                    /*EXAMPLE FOR NRC*/
+--CUSTOM DIMENSIONS
+,CAST(ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF((COMMERCIAL_AREA), ''), 'Unknown')), 100000))AS INT64) AS Key_COMMERCIAL_AREA
 
 --METRICS
 ,COUNT(*) AS Event_Count
