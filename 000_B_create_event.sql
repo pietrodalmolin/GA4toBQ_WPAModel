@@ -60,9 +60,9 @@ ON wpa.interface_brand = ca.interface_brand
 AND wpa.geo.country=ca.country
 
 --DATE FILTER
-WHERE wpa.date < TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)) --*(4)
+WHERE wpa.date < TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)) --*(3)
 
---EVENT FILTERS *(5)
+--EVENT FILTERS *(4)
 AND Event_Name='Registration_Funnel'    /*EXAMPLE FOR NRC*/
 AND EventAction='NRC'                   /*EXAMPLE FOR NRC*/
 
