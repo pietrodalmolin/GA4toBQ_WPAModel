@@ -53,32 +53,19 @@ Under the `-- EVENT SPECIFIC DIMENSIONS` section:
 
 ---
 
-### *(3) Properties Tables*
-Update the list of properties tables to ensure accuracy.  
-To find the latest list, refer to the query: 00_List of Properties (found in this repository).
-
----
-
-### *(4) Date Filter*
+### *(3) Date Filter*
 Set the appropriate **date range** for the data extraction.  
 Update the date filter accordingly (e.g., for the last 30 days or a specific historical range).
 
 ---
 
-### *(5) Event Filters*
+### *(4) Event Filters*
 Apply filters to accurately retrieve the desired event(s):
 - Always include a filter on `event_name`.
 - Add a filter on `event_action` if applicable.
 - The more specific the filter, the better for performance and cost optimization.
 
 > ✅ Efficient filtering = reduced consumption costs.
-
----
-
-### *(6) Group By Clause*
-In the `GROUP BY` section:
-- Remove the example event-specific columns.
-- Add the event-specific columns you defined in step *(2)* to ensure proper grouping.
 
 ---
 
