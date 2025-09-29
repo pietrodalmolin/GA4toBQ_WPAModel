@@ -30,12 +30,14 @@ property_id
 ,Key_app_info_version
 ,Key_app_info_install_source
 
+------OPTIONAL PART--
 --TRAFFIC COLUMNS
 ,lnd_source
 ,lnd_medium
 ,lc_source
 ,lc_medium
 ,Key_channel_grouping
+---------------------
 
 --GLOBAL DIMENSIONS
 ,Key_device_web_info_hostname
