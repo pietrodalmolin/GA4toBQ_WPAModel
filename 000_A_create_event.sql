@@ -1,4 +1,4 @@
-CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Events.WPA_CA_NRC` --*(1)
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Events.TABLENAME` --*(1)
 PARTITION BY DATE(Date)
 CLUSTER BY Key_Interface_Brand AS
 
@@ -68,7 +68,7 @@ property_id
 FROM `steam-mantis-108908.WPA.00_MasterTable` m
 
 --DATE FILTER
-WHERE date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)) --*(3)
+WHERE date < TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)) --*(3)
 
 --EVENT FILTERS *(4)
 AND Event_Name='Registration_Funnel'
