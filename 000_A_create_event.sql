@@ -1,85 +1,76 @@
-CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Events.TABLENAME` --*(1)
+CREATE OR REPLACE TABLE `steam-mantis-108908.WPA_Events.WPA_CA_NRC` --*(1)
 PARTITION BY DATE(Date)
 CLUSTER BY Key_Interface_Brand AS
-(
+
 SELECT
-
 --"SESSION LEVEL" COLUMNS
-/*1*/   CAST(wpa.property_id AS INT64) AS property_id
-/*2*/   ,wpa.date
-/*3*/   ,FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) AS session_id
-/*4*/   ,FARM_FINGERPRINT(wpa.user_pseudo_id) AS user_pseudo_id
-/*5*/   ,GUID_Event
-/*6*/   ,ga_session_number AS Key_ga_session_number
-/*7*/   ,CAST(session_engaged AS INT64) AS Key_session_engaged
-/*8*/   ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(wpa.Interface_Brand, ''), 'Unknown')), 100000)) AS Key_Interface_Brand
-/*9*/   ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(Customer_Status_Start, ''), 'Unknown')), 100000)) AS Key_Customer_Status_Start
-/*10*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(geo.city, ''), 'Unknown'))) AS Key_city
-/*11*/  ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(geo.country, ''), 'Unknown')), 100000)) AS Key_country
-/*12*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(geo.region, ''), 'Unknown'))) AS Key_region
-/*13*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(Technical_PlatformUsed, ''), 'Unknown'))) AS Key_Technical_PlatformUsed
-/*14*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.mobile_brand_name, ''), 'Unknown'))) AS Key_mobile_brand_name
-/*15*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.web_info.browser, ''), 'Unknown'))) AS Key_device_web_info_browser
-/*16*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.web_info.browser_version, ''), 'Unknown'))) AS Key_device_web_info_browser_version
-/*17*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.category, ''), 'Unknown'))) AS Key_device_category
-/*18*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.mobile_marketing_name, ''), 'Unknown'))) AS Key_mobile_marketing_name
-/*19*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.mobile_model_name, ''), 'Unknown'))) AS Key_mobile_model_name
-/*20*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.operating_system, ''), 'Unknown'))) AS Key_device_operating_system
-/*21*/  ,ABS(FARM_FINGERPRINT(IFNULL(NULLIF(device.operating_system_version, ''), 'Unknown'))) AS Key_device_operating_system_version
+property_id
+,date
+,event_datetime
+,event_timestamp
+,session_id
+,user_pseudo_id
+,GUID
+,Key_ga_session_number
+,Key_session_engaged
+,Key_Interface_Brand
+,Key_Customer_Status_Start
+,Key_city
+,Key_country
+,Key_region
+,Key_Commercial_Area
+,Key_Technical_PlatformUsed
+,Key_mobile_brand_name
+,Key_device_web_info_browser
+,Key_device_web_info_browser_version
+,Key_device_category
+,Key_mobile_marketing_name
+,Key_mobile_model_name
+,Key_device_operating_system
+,Key_device_operating_system_version
+,Key_app_info_id
+,Key_app_info_version
+,Key_app_info_install_source
+
 --TRAFFIC COLUMNS
-/*22*/  ,lnd.lnd_source
-/*23*/  ,lnd.lnd_medium
-/*24*/  ,collected_traffic_source.manual_source as lc_source
-/*25*/  ,collected_traffic_source.manual_medium as lc_medium
-/*26*/  ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(lnd.channel_grouping, ''), 'Unknown')), 100000)) AS Key_channel_grouping
+,lnd_source
+,lnd_medium
+,lc_source
+,lc_medium
+,Key_channel_grouping
+
 --GLOBAL DIMENSIONS
-/*27*/  ,Content_Group
-/*28*/  ,event_name
-/*29*/  ,EventAction
-/*30*/  ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(Customer_Status_Event, ''), 'Unknown')), 100000)) AS Key_Customer_Status_Event
-/*31*/  ,device.web_info.hostname AS device_web_info_hostname
-/*32*/  ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(Login_Status, ''), 'Unknown')), 100000)) AS Key_Login_Status
-/*33*/  ,page_location
-/*34*/  ,page_referrer
-/*35*/  ,page_title
-/*36*/  ,Technical_EventName
-/*37*/  ,Technical_PlatformName
-/*38*/  ,Technical_ScreenOrientation
-/*39*/  ,Technical_ScreenResolution
-/*40*/  ,ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF(User_CustomerLevel, ''), 'Unknown')), 100000)) AS Key_User_CustomerLevel
-/*41*/  ,Sub_Area
---COMMERCIAL AREA
-/*42*/  ,CAST(ABS(MOD(FARM_FINGERPRINT(IFNULL(NULLIF((COMMERCIAL_AREA), ''), 'Unknown')), 100000))AS INT64) AS Key_COMMERCIAL_AREA
+,Key_device_web_info_hostname
+,Key_Interface_SiteLanguage
+,Key_Jurisdiction
+,content_group
+,event_name
+,Technical_EventName
+,EventAction
+,Key_Customer_Status_Event
+,Key_Login_Status
+,page_location
+,page_referrer
+,page_title
+,Key_Technical_PlatformName
+,Technical_ScreenOrientation
+,Technical_ScreenResolution
+,Key_User_CustomerLevel
+,Sub_Area
 --EVENT SPECIFIC DIMENSIONS *(2)
-/*43*/  ,Registration_Type                /*EXAMPLE FOR NRC*/
-/*44*/  ,User_Reg_Method                  /*EXAMPLE FOR NRC*/
-/*45*/  ,User_Reg_Step                    /*EXAMPLE FOR NRC*/
---CALCULATED COLUMNS
----
+,Registration_Type
+,User_Reg_Method
+,User_Reg_Step
+
 --METRICS
-,COUNT(*) AS Event_Count
+,1 AS Event_Count
 
-FROM `steam-mantis-108908.WPA_Events.AllProperties` wpa
-
---MAPPING WITH COMMERCIAL AREA
-LEFT JOIN `steam-mantis-108908.WPA_Keys.map_COMMERCIAL_AREA` ca
-ON wpa.interface_brand = ca.interface_brand
-AND wpa.geo.country=ca.country
-
---MAPPING WITH LND TRAFFIC SOURCE
-LEFT JOIN 
-(SELECT session_id,MAX(lnd_source) as lnd_source,MAX(lnd_medium) as lnd_medium,MAX(channel_grouping) as channel_grouping 
-FROM `steam-mantis-108908.WPA_Events.00_LastNonDirectTraffic`
-WHERE date < TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)) --*(3)
-GROUP BY session_id) lnd
-ON FARM_FINGERPRINT(CONCAT(wpa.user_pseudo_id, ga_session_id)) = lnd.session_id
+FROM `steam-mantis-108908.WPA.00_MasterTable` m
 
 --DATE FILTER
-WHERE wpa.date < TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)) --*(3)
+WHERE date = TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)) --*(3)
 
 --EVENT FILTERS *(4)
-AND Event_Name='Registration_Funnel'    /*EXAMPLE FOR NRC*/
-AND EventAction='NRC'                   /*EXAMPLE FOR NRC*/
-
-GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45
-)
+AND Event_Name='Registration_Funnel'
+AND Technical_EventName='ConfirmedRegistration'
+AND EventAction='NRC'
