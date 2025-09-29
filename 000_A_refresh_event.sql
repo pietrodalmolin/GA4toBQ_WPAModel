@@ -1,4 +1,4 @@
-INSERT INTO `steam-mantis-108908.WPA_Events.WPA_CA_NRC` --*(1)
+INSERT INTO `steam-mantis-108908.WPA_Events.TABLENAME` --*(1)
 
 SELECT
 --"SESSION LEVEL" COLUMNS
